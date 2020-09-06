@@ -1,8 +1,16 @@
+import time
+import logging
 import paramiko
 import yaml
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
+
+logging.basicConfig(level=logging.DEBUG)
 
 stream = open("../.config/config.yaml")
-config = yaml.load(stream, Loader=yaml.CLoader)
+config = yaml.load(stream, Loader=Loader)
 
 host = config['nodes'][0]['host']
 username = config['nodes'][0]['username']
@@ -14,15 +22,32 @@ try:
     client.load_system_host_keys()
     client.connect(host, username=username, password=password, port=port)
 
-    command_list = ["cd JoJo-Telegram-Bot", "python3 reply.py"]
+    command_list = ["cd JoJo-Telegram-Bot", "source env/bin/activate", "python3 reply.py"]
     stdin, stdout, stderr = client.exec_command("; ".join(command_list))
-    for line in stdout:
-        print('... ' + line.strip('\n'))
+    while True:
+        try:
+            transport = client.get_transport()
+            transport.send_ignore()
+            if stdout.channel.exit_status_ready():
+                exit_status = stdout.channel.recv_exit_status()
+            else:
+                exit_status = 0
+            if transport.is_active() and not (exit_status > 0):
+                logging.debug("sleeping for 0.1s")
+                time.sleep(0.1)
+            else:
+                logging.info("connection closed")
+                break
+        except EOFError as e:
+            logging.info("connection closed")
+            break
+    client.close()
+    del client, stdin, stdout, stderr
 
 except Exception as e:
-    print("closing connection")
-    client.close()
+    logging.error("Got error %s", e)
 
 finally:
-    print("closing connection")
-    client.close()
+    logging.info("Inside finally")
+
+logging.info("Hello there")
