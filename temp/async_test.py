@@ -12,7 +12,7 @@ except ImportError:
 
 logging.basicConfig(level=logging.DEBUG)
 
-stream = open("../.config/config.yaml")
+stream = open("../.config/heiko.yml")
 config = yaml.load(stream, Loader=Loader)
 
 host = config['nodes'][0]['host']
