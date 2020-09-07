@@ -4,6 +4,7 @@ import yaml
 import asyncio, asyncssh, sys
 import time
 import logging
+import heapq
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -21,12 +22,28 @@ port = config['nodes'][0]['port']
 password = config['nodes'][0]['password']
 commands = config['jobs'][0]['commands']
 
-async def run_client():
-    async with asyncssh.connect(host, port=port, username=username, password=password) as conn:
+nodes = config['nodes']
+
+nodelist = []
+
+for i in range(len(nodes)):
+    nodelist.append([1, nodes[i]])
+
+heapq.heapify(nodelist)
+
+async def run_client(node):
+    async with asyncssh.connect(node['host'], port=node['port'], username=node['username'], password=node['password']) as conn:
         result = await conn.run('; '.join(commands), check=True)
         print(result.stdout, end='')
 
-try:
-    asyncio.get_event_loop().run_until_complete(run_client())
-except Exception as exc:
-    logging.error('Got error %s', exc)
+while True:
+    node = heapq.heappop(nodelist)
+    try:
+        asyncio.get_event_loop().run_until_complete(run_client(node[1]))
+    except Exception as exc:
+        logging.error('Got error %s', exc)
+    finally:
+        if node[0] <= 10:
+            node[0] = node[0] * 2
+        time.sleep(node[0])
+        heapq.heappush(nodelist, node)
