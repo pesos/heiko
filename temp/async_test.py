@@ -19,10 +19,11 @@ host = config['nodes'][0]['host']
 username = config['nodes'][0]['username']
 port = config['nodes'][0]['port']
 password = config['nodes'][0]['password']
+commands = config['jobs'][0]['commands']
 
 async def run_client():
     async with asyncssh.connect(host, port=port, username=username, password=password) as conn:
-        result = await conn.run('cd JoJo-Telegram-Bot && python3 reply.py', check=True)
+        result = await conn.run('; '.join(commands), check=True)
         print(result.stdout, end='')
 
 try:

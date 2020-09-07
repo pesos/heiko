@@ -10,3 +10,9 @@ nodes:
     username: ssh_username
     port: ssh_port_number
     password: ssh_password
+
+jobs:
+  - name: job_1
+    commands:
+      - "cd ~/Downloads"
+      - "touch sample.txt"
