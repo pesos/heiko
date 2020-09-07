@@ -27,7 +27,7 @@ nodes = config['nodes']
 nodelist = []
 
 for i in range(len(nodes)):
-    nodelist.append([1, nodes[i]])
+    nodelist.append([1, i, nodes[i]])
 
 heapq.heapify(nodelist)
 
@@ -39,7 +39,7 @@ async def run_client(node):
 while True:
     node = heapq.heappop(nodelist)
     try:
-        asyncio.get_event_loop().run_until_complete(run_client(node[1]))
+        asyncio.get_event_loop().run_until_complete(run_client(node[2]))
     except Exception as exc:
         logging.error('Got error %s', exc)
     finally:
