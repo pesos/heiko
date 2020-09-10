@@ -36,14 +36,15 @@ async def run_client(node):
         result = await conn.run('; '.join(commands), check=True)
         print(result.stdout, end='')
 
-while True:
-    node = heapq.heappop(nodelist)
-    try:
-        asyncio.get_event_loop().run_until_complete(run_client(node[2]))
-    except Exception as exc:
-        logging.error('Got error %s', exc)
-    finally:
-        if node[0] <= 10:
-            node[0] = node[0] * 2
-        time.sleep(node[0])
-        heapq.heappush(nodelist, node)
+def main():
+    while True:
+        node = heapq.heappop(nodelist)
+        try:
+            asyncio.get_event_loop().run_until_complete(run_client(node[2]))
+        except Exception as exc:
+            logging.error('Got error %s', exc)
+        finally:
+            if node[0] <= 10:
+                node[0] = node[0] * 2
+            time.sleep(node[0])
+            heapq.heappush(nodelist, node)
