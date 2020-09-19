@@ -12,3 +12,6 @@ htmlcov
 env/
 
 .config/
+
+# documentation files
+docs/_build
