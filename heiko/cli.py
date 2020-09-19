@@ -12,22 +12,36 @@ class HeikoDaemon(Daemon):
         main()
 
 # Parse CLI args
-parser = argparse.ArgumentParser(prog='heiko')
-subparsers = parser.add_subparsers(dest='command')
+def make_parser():
+    """Creates an ArgumentParser, configures and returns it.
 
-parser_run = subparsers.add_parser('start', help='Starts heiko daemon')
-parser_run.add_argument('--name', help='a unique name for the daemon', required=True)
+    This was made into a separate function to be used with sphinx-argparse
 
-parser_stop = subparsers.add_parser('stop', help='Stops heiko daemon')
-parser_stop.add_argument('--name', help='a unique name for the daemon', required=True)
+    :rtype: :py:class:`argparse.ArgumentParser`
+    """
+    parser_ = argparse.ArgumentParser(prog='heiko')
+    subparsers = parser_.add_subparsers(dest='command')
 
-parser_restart = subparsers.add_parser('restart', help='Restarts heiko daemon')
-parser_restart.add_argument('--name', help='a unique name for the daemon', required=True)
+    parser_run = subparsers.add_parser('start', help='Starts heiko daemon')
+    parser_run.add_argument('--name', help='a unique name for the daemon', required=True)
 
-parser_list = subparsers.add_parser('list', help='lists all running heiko daemons')
+    parser_stop = subparsers.add_parser('stop', help='Stops heiko daemon')
+    parser_stop.add_argument('--name', help='a unique name for the daemon', required=True)
+
+    parser_restart = subparsers.add_parser('restart', help='Restarts heiko daemon')
+    parser_restart.add_argument('--name', help='a unique name for the daemon', required=True)
+
+    parser_list = subparsers.add_parser('list', help='lists all running heiko daemons')
+
+    return parser_
+
+parser = make_parser()
 
 def cli():
+    """Entrypoint to the command-line interface (CLI) of heiko.
 
+    It parses arguments from sys.argv and performs the appropriate actions.
+    """
     args = parser.parse_args()
 
     # Get config directory
