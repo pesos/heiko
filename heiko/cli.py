@@ -3,9 +3,13 @@ import sys
 import argparse
 from pathlib import Path
 import glob
+import asyncio
+
 
 from heiko.daemon import Daemon
 from heiko.main import main
+from heiko.load_utils import HeikoGetNodeDetails
+from heiko.config import *
 
 class HeikoDaemon(Daemon):
     def run(self):
@@ -32,6 +36,8 @@ def make_parser():
     parser_restart.add_argument('--name', help='a unique name for the daemon', required=True)
 
     parser_list = subparsers.add_parser('list', help='lists all running heiko daemons')
+
+    parser_init = subparsers.add_parser('init', help='initialize and benchmark all nodes')
 
     return parser_
 
@@ -63,6 +69,18 @@ def cli():
         for name, pid in zip(names, pids):
             print(f'{name}\t{pid}')
 
+    elif args.command == 'init':
+        
+        c = Config(CONFIG_LOCATION)
+        
+        for node in c.nodes:
+            # Initialization and Benchmarking
+            utils = HeikoGetNodeDetails(node=node)
+            asyncio.get_event_loop().run_until_complete(utils.getDetails())
+            print("Printing node details")
+            print("CPU:\n", utils.details['cpu'].stdout) #, "\ntype = ", type(utils.details['cpu']))
+            print("\nRAM:\n", utils.details['ram'].stdout)
+            print("\nCPU Usage:\n", utils.details['usage'].stdout)
     else:
         if 'name' not in args:
             parser.print_usage()
@@ -72,6 +90,8 @@ def cli():
         daemon = HeikoDaemon(heiko_home / f'heiko_{args.name}.pid',
                             stdout=heiko_home / f'heiko_{args.name}.out',
                             stderr=heiko_home / f'heiko_{args.name}.out')
+
+
         if args.command == 'start':
             daemon.start()
         elif args.command == 'stop':
