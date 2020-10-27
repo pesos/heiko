@@ -4,7 +4,7 @@ import asyncio
 import heapq
 
 from heiko.config import Config
-from heiko.ssh_utils import run_client
+from heiko.utils.ssh import run_client
 
 class BasicScheduler:
     """A very simple scheduler that uses a priority queue to iterate through the avaiable nodes

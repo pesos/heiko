@@ -17,7 +17,7 @@ class HeikoGetNodeDetails:
        self.details = dict()
     
     async def getNodeRam(self, conn):
-        ram = await conn.run('free -h --si gb', check=True)
+        ram = await conn.run('free', check=True)
         logging.info("Fetching ram of node %s", self.name) 
         return ram
     

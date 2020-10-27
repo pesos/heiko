@@ -9,7 +9,7 @@ import logging
 
 from heiko.daemon import Daemon
 from heiko.main import main
-from heiko.load_utils import HeikoGetNodeDetails
+from heiko.utils.load import NodeDetails
 from heiko.config import *
 
 class HeikoDaemon(Daemon):
@@ -77,12 +77,12 @@ def cli():
         for node in c.nodes:
             # Initialization and Benchmarking
             try:
-                utils = HeikoGetNodeDetails(node=node)
+                utils = NodeDetails(node=node)
                 asyncio.get_event_loop().run_until_complete(utils.getDetails())
                 print("Printing node details")
-                print("CPU:\n", utils.details['cpu'].stdout) #, "\ntype = ", type(utils.details['cpu']))
-                print("\nRAM:\n", utils.details['ram'].stdout)
-                print("\nCPU Usage:\n", utils.details['usage'].stdout)
+                print("CPU:\n", utils.details['cpu'])
+                print("\nRAM:\n", utils.details['ram'])
+                print("\nCPU Usage:\n", utils.details['usage'])
             except Exception as e:
                 logging.error('Got error %s',e)   
 
