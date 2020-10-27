@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 import glob
 import asyncio
+import logging
 
 
 from heiko.daemon import Daemon
@@ -75,12 +76,16 @@ def cli():
         
         for node in c.nodes:
             # Initialization and Benchmarking
-            utils = HeikoGetNodeDetails(node=node)
-            asyncio.get_event_loop().run_until_complete(utils.getDetails())
-            print("Printing node details")
-            print("CPU:\n", utils.details['cpu'].stdout) #, "\ntype = ", type(utils.details['cpu']))
-            print("\nRAM:\n", utils.details['ram'].stdout)
-            print("\nCPU Usage:\n", utils.details['usage'].stdout)
+            try:
+                utils = HeikoGetNodeDetails(node=node)
+                asyncio.get_event_loop().run_until_complete(utils.getDetails())
+                print("Printing node details")
+                print("CPU:\n", utils.details['cpu'].stdout) #, "\ntype = ", type(utils.details['cpu']))
+                print("\nRAM:\n", utils.details['ram'].stdout)
+                print("\nCPU Usage:\n", utils.details['usage'].stdout)
+            except Exception as e:
+                logging.error('Got error %s',e)   
+
     else:
         if 'name' not in args:
             parser.print_usage()

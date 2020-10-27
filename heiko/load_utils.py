@@ -18,17 +18,17 @@ class HeikoGetNodeDetails:
     
     async def getNodeRam(self, conn):
         ram = await conn.run('free -h --si gb', check=True)
-        print("Fetching ram of node: ", self.name) 
+        logging.info("Fetching ram of node %s", self.name) 
         return ram
     
     async def getCpuUsage(self, conn):
         usage = await conn.run('uptime', check=True)
-        print('Fetching CPU Usage of node: ', self.name)
+        logging.info('Fetching CPU Usage of node %s', self.name)
         return usage
 
     async def getCpuDetails(self, conn):
         cpu = await conn.run('lscpu -J', check=True)
-        print('Fetching CPU details of node: ', self.name)
+        logging.info('Fetching CPU details of node %s', self.name)
         return cpu
 
     async def getDetails(self):
