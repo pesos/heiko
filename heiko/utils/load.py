@@ -53,7 +53,7 @@ class NodeDetails:
         info = info.stdout
         info = json.loads(info)
         info = info['lscpu']
-        cpu_info = dict()
+        cpu_info = {'cpus': '', 'cpu_max': '', 'cpu_mhz': ''}
         for field in info:
             # print(field)
             # print(field['field'])
@@ -61,8 +61,9 @@ class NodeDetails:
                 cpu_info['cpus'] = field['data']
             elif field['field'] == "CPU max MHz:":
                 cpu_info['cpu_max'] = field['data']
-            elif field['field'] == "CPU min MHz:":
-                cpu_info['cpu_min'] = field['data']
+            elif field['field'] == "CPU MHz:":
+                cpu_info['cpu_mhz'] = field['data']
+
         return cpu_info
 
     async def getDetails(self):
