@@ -2,13 +2,17 @@ import logging
 import sys, os, time, atexit
 from signal import SIGTERM
 
+
 class Daemon:
     """
     A generic daemon class.
 
     Usage: subclass the Daemon class and override the run() method
     """
-    def __init__(self, pidfile, stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
+
+    def __init__(
+        self, pidfile, stdin="/dev/null", stdout="/dev/null", stderr="/dev/null"
+    ):
         self.stdin = stdin
         self.stdout = stdout
         self.stderr = stderr
@@ -45,9 +49,9 @@ class Daemon:
         # redirect standard file descriptors
         sys.stdout.flush()
         sys.stderr.flush()
-        si = open(self.stdin, 'r')
-        so = open(self.stdout, 'a+')
-        se = open(self.stderr, 'a+')
+        si = open(self.stdin, "r")
+        so = open(self.stdout, "a+")
+        se = open(self.stderr, "a+")
         os.dup2(si.fileno(), sys.stdin.fileno())
         os.dup2(so.fileno(), sys.stdout.fileno())
         os.dup2(se.fileno(), sys.stderr.fileno())
@@ -55,7 +59,7 @@ class Daemon:
         # write pidfile
         atexit.register(self.delpid)
         pid = str(os.getpid())
-        open(self.pidfile,'w+').write("%s\n" % pid)
+        open(self.pidfile, "w+").write("%s\n" % pid)
 
     def delpid(self):
         os.remove(self.pidfile)
@@ -63,7 +67,7 @@ class Daemon:
     @property
     def pid(self):
         try:
-            with open(self.pidfile, 'r') as pf:
+            with open(self.pidfile, "r") as pf:
                 pid = int(pf.read().strip())
         except IOError:
             pid = None
@@ -94,7 +98,7 @@ class Daemon:
         if not pid:
             message = "pidfile %s does not exist. Daemon not running?\n"
             sys.stderr.write(message % self.pidfile)
-            return # not an error in a restart
+            return  # not an error in a restart
 
         # Try killing the daemon process
         try:

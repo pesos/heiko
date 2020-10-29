@@ -8,35 +8,41 @@ try:
 except ImportError:
     from yaml import Loader
 
-CONFIG_LOCATION = os.path.join(os.getcwd(), '.config/heiko.yml')
+CONFIG_LOCATION = os.path.join(os.getcwd(), ".config/heiko.yml")
+
 
 @dataclass
 class Node:
     """Class to store data about a single node"""
+
     name: str
     host: str
     username: str
     password: str
     port: str
 
+
 @dataclass
 class Job:
     """Class to store data about a job"""
+
     name: str
     commands: List
 
+
 class Config:
     """Class to read and parse config file(s)"""
+
     def __init__(self, config_file=None):
         if config_file is None:
             config_file = CONFIG_LOCATION
         with open(config_file, "rt") as stream:
             self.config = yaml.load(stream, Loader=Loader)
         self.nodes = []
-        for node in self.config['nodes']:
+        for node in self.config["nodes"]:
             self.nodes.append(Node(**node))
         self.jobs = []
-        for job in self.config['jobs']:
+        for job in self.config["jobs"]:
             self.jobs.append(Job(**job))
 
     @property
