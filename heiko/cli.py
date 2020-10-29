@@ -17,7 +17,7 @@ from heiko.config import Config, CONFIG_LOCATION
 logging.basicConfig(
     format="%(asctime)s %(levelname)s: %(message)s",
     datefmt="%m/%d/%Y %I:%M:%S %p",
-    level=logging.WARNING,
+    level=logging.INFO,
 )
 
 
@@ -67,6 +67,13 @@ def make_parser():
         action="store_true",
         dest="follow",
         default=False,
+    )
+    parser_logs.add_argument(
+        "--clear",
+        help="clear the log file before reading",
+        action="store_true",
+        dest="clear",
+        default=False
     )
 
     return parser_
@@ -138,12 +145,14 @@ def cli():
                 logging.error("%s", e)
 
     elif args.command == "logs":
-        if args.follow:
-            with open(heiko_home / f"heiko_{args.name}.out") as f:
+        mode = "rt"
+        if args.clear:
+            mode = "wt+"
+        with open(heiko_home / f"heiko_{args.name}.out", mode) as f:
+            if args.follow:
                 for line in follow(f):
                     print(line, end="")
-        else:
-            with open(heiko_home / f"heiko_{args.name}.out") as f:
+            else:
                 print(f.read())
     else:
         if "name" not in args:

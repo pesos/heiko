@@ -25,6 +25,7 @@ class BasicScheduler:
                 logging.info("Ignoring node for now")
 
         heapq.heapify(self.nodelist)
+        logging.info("Node list: %s", [(*n[:6], n[6].name) for n in self.nodelist])
 
     def nodeDetail(self, node):
         # print("Node = ", node)
@@ -54,6 +55,7 @@ class BasicScheduler:
         while True:
             node = heapq.heappop(self.nodelist)
             try:
+                logging.info("Running on client %s", node[6].name)
                 asyncio.get_event_loop().run_until_complete(
                     run_client(node[6], self.config.first_job)
                 )
