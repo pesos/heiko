@@ -35,7 +35,7 @@ class NodeDetails:
     
     def parserRam(self, ram):
         ram = ram.stdout
-        print(ram.split('\n')[1])
+        # print(ram.split('\n')[1])
         pattern = re.compile(r"Mem:\ +(\d+)\ +\d+\ +\d+\ +\d+\ +\d+\ +(\d+)")
         mem = pattern.findall(ram)
         mem = {'total_mem': mem[0][0], 'free_mem': mem[0][1]}
@@ -44,7 +44,7 @@ class NodeDetails:
 
     def parseLoad(self, load):
         load = load.stdout
-        print(load)
+        # print(load)
         pattern = re.compile(r"load average: \d+\.\d+, (\d+\.\d+), \d+\.\d+")
         load = pattern.findall(load)
         return load[0]

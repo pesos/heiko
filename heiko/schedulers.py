@@ -17,12 +17,16 @@ class BasicScheduler:
         self.nodelist = []
 
         for i in range(len(config.nodes)):
-            self.nodeDetail(config.nodes[i])
+            try:
+                self.nodeDetail(config.nodes[i])
+            except Exception as e:
+                logging.error("Got error %s", e)
+                logging.info("Ignoring node for now")
 
         heapq.heapify(self.nodelist)
     
     def nodeDetail(self, node):
-        print("Node = ", node)
+        # print("Node = ", node)
         utils = NodeDetails(node=node)
         asyncio.get_event_loop().run_until_complete(utils.getDetails())
         cores = utils.details['cpu']['cpus']
@@ -56,5 +60,10 @@ class BasicScheduler:
                 if  float(node[0]) <= 10:
                     node[0] = node[0] * 2
                 time.sleep(node[0])
-                self.updateNode(node)
+                try:
+                    self.updateNode(node)
+                except Exception as e:
+                    logging.error("Got error %s", e)
+                    logging.info("Ignoring node for now")
+                
                 heapq.heappush(self.nodelist, node)

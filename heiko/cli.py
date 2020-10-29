@@ -39,6 +39,9 @@ def make_parser():
     parser_list = subparsers.add_parser('list', help='lists all running heiko daemons')
 
     parser_init = subparsers.add_parser('init', help='initialize and benchmark all nodes')
+    
+    parser_logs = subparsers.add_parser('logs', help='view logs of a daemon')
+    parser_logs.add_argument('--name', help='name of the daemon', required=True)
 
     return parser_
 
@@ -85,7 +88,10 @@ def cli():
                 print("\nCPU Usage:\n", utils.details['usage'])
             except Exception as e:
                 logging.error('Got error %s',e)   
-
+    
+    elif args.command == "logs":
+        with open(heiko_home / f'heiko_{args.name}.out') as f:
+            print(f.read())
     else:
         if 'name' not in args:
             parser.print_usage()
