@@ -1,5 +1,4 @@
 import sys
-import logging
 import asyncssh
 
 from heiko.config import Node, Job

@@ -1,16 +1,24 @@
 import os
+import time
 import sys
 import argparse
 from pathlib import Path
 import glob
 import asyncio
 import logging
+from typing import Iterator
 
 
 from heiko.daemon import Daemon
 from heiko.main import main
 from heiko.utils.load import NodeDetails
-from heiko.config import *
+from heiko.config import Config, CONFIG_LOCATION
+
+logging.basicConfig(
+    format="%(asctime)s %(levelname)s: %(message)s",
+    datefmt="%m/%d/%Y %I:%M:%S %p",
+    level=logging.WARNING,
+)
 
 
 class HeikoDaemon(Daemon):
@@ -52,11 +60,36 @@ def make_parser():
 
     parser_logs = subparsers.add_parser("logs", help="view logs of a daemon")
     parser_logs.add_argument("--name", help="name of the daemon", required=True)
+    parser_logs.add_argument(
+        "-f",
+        "--follow",
+        help="follow log file as it is updated",
+        action="store_true",
+        dest="follow",
+        default=False,
+    )
 
     return parser_
 
 
 parser = make_parser()
+
+
+def follow(file) -> Iterator[str]:
+    """ Yield each line from a file as they are written. """
+    line = ""
+    i = 0
+    while True:
+        tmp = file.readline()
+        if tmp is not None:
+            line += tmp
+            i += 1
+            if line.endswith("\n") or i >= 5:
+                yield line
+                line = ""
+                i = 0
+        else:
+            time.sleep(0.1)
 
 
 def cli():
@@ -102,11 +135,16 @@ def cli():
                 print("\nRAM:\n", utils.details["ram"])
                 print("\nCPU Usage:\n", utils.details["usage"])
             except Exception as e:
-                logging.error("Got error %s", e)
+                logging.error("%s", e)
 
     elif args.command == "logs":
-        with open(heiko_home / f"heiko_{args.name}.out") as f:
-            print(f.read())
+        if args.follow:
+            with open(heiko_home / f"heiko_{args.name}.out") as f:
+                for line in follow(f):
+                    print(line, end="")
+        else:
+            with open(heiko_home / f"heiko_{args.name}.out") as f:
+                print(f.read())
     else:
         if "name" not in args:
             parser.print_usage()

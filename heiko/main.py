@@ -1,6 +1,5 @@
 import logging
 from heiko.config import Config
-from heiko.daemon import Daemon
 import heiko.schedulers as schedulers
 
 
@@ -11,5 +10,9 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(
+        format="%(asctime)s %(levelname)s:%(message)s",
+        datefmt="%m/%d/%Y %I:%M:%S %p",
+        level=logging.DEBUG,
+    )
     main()

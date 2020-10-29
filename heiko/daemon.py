@@ -1,5 +1,7 @@
-import logging
-import sys, os, time, atexit
+import sys
+import os
+import time
+import atexit
 from signal import SIGTERM
 
 
@@ -123,6 +125,7 @@ class Daemon:
 
     def run(self):
         """
-        You should override this method when you subclass Daemon. It will be called after the process has been
+        You should override this method when you subclass Daemon.
+        It will be called after the process has been
         daemonized by start() or restart().
         """
