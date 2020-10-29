@@ -73,7 +73,7 @@ def make_parser():
         help="clear the log file before reading",
         action="store_true",
         dest="clear",
-        default=False
+        default=False,
     )
 
     return parser_
