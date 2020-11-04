@@ -5,10 +5,14 @@ from heiko.config import Node, Job
 
 
 class HeikoSSHClientSession(asyncssh.SSHClientSession):
+    """A class to handle SSH connections cleanly
+    """
     def data_received(self, data, datatype):
+        """Prints the received data directly"""
         print(data, end="")
 
     def connection_lost(self, exc):
+        """Prints an error message to stderr"""
         if exc:
             print("SSH session error: " + str(exc), file=sys.stderr)
 
