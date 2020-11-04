@@ -83,7 +83,14 @@ parser = make_parser()
 
 
 def follow(file) -> Iterator[str]:
-    """ Yield each line from a file as they are written. """
+    """Yields each line in a file as they are written
+    (or yields when more than 5 characters have been written)
+
+    :param file: file handle to read
+    :type file: file handle
+    :yield: a newline terminated line or a string of 5 characters
+    :rtype: Iterator[str]
+    """
     line = ""
     i = 0
     while True:
@@ -138,21 +145,25 @@ def cli():
                 utils = NodeDetails(node=node)
                 asyncio.get_event_loop().run_until_complete(utils.getDetails())
                 print("Printing node details")
-                print("CPU:\n", utils.details["cpu"])
-                print("\nRAM:\n", utils.details["ram"])
-                print("\nCPU Usage:\n", utils.details["usage"])
+                print("CPU:\n", utils.cpu)
+                print("\nRAM:\n", utils.mem)
+                print("\nCPU Usage:\n", utils.load)
             except Exception as e:
                 logging.error("%s", e)
 
     elif args.command == "logs":
+        # read logs
         mode = "rt"
         if args.clear:
+            # clear file before reading (opening in w mode clears the file)
             mode = "wt+"
         with open(heiko_home / f"heiko_{args.name}.out", mode) as f:
             if args.follow:
+                # follow log as it is written
                 for line in follow(f):
                     print(line, end="")
             else:
+                # read whole log at once
                 print(f.read())
     else:
         if "name" not in args:

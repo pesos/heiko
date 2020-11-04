@@ -12,6 +12,7 @@ The name heiko is derived from the Japanese term for *equilibrium*.
 
    quickstart
    cli
+   api
    contributing
 
 Indices and tables

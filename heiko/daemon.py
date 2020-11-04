@@ -9,6 +9,8 @@ class Daemon:
     """
     A generic daemon class.
 
+    Implementation taken from: https://stackoverflow.com/a/6374881/11199009
+
     Usage: subclass the Daemon class and override the run() method
     """
 

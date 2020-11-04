@@ -7,6 +7,12 @@ from heiko.config import Node
 
 
 class NodeDetails:
+    """Class to store details of a node such as CPU frequency, no of virtual CPUs,
+    load average, total memory, memory usage, etc.
+
+    :param node: node to store details of
+    :type node: :py:class:`heiko.config.Node`.
+    """
     def __init__(self, node: Node):
         self.node = node
 
@@ -19,16 +25,34 @@ class NodeDetails:
         self.mem = {"total_mem": -1, "free_mem": -1}
 
     async def getNodeRam(self, conn):
+        """Gets RAM details of the node using the ``free`` command.
+
+        :param conn: asynchssh connection object
+        :return: output of the command
+        :rtype: str
+        """
         ram = await conn.run("free", check=True)
         logging.info("Fetching ram of node %s", self.node.name)
         return ram
 
     async def getCpuUsage(self, conn):
+        """Gets CPU usage (load average) of the node using the ``uptime`` command.
+
+        :param conn: asynchssh connection object
+        :return: output of the command
+        :rtype: str
+        """
         usage = await conn.run("uptime", check=True)
         logging.info("Fetching CPU Usage of node %s", self.node.name)
         return usage
 
     async def getCpuDetails(self, conn):
+        """Gets CPU details of the node using the ``lscpu -J`` command.
+
+        :param conn: asynchssh connection object
+        :return: output of the command
+        :rtype: str
+        """
         cpu = await conn.run("lscpu -J", check=True)
         logging.info("Fetching CPU details of node %s", self.node.name)
         return cpu
@@ -60,6 +84,8 @@ class NodeDetails:
                 self.cpu["cpu_mhz"] = float(field["data"])
 
     async def getDetails(self):
+        """Gets and saves all details of the node
+        """
         async with asyncssh.connect(
             self.node.host,
             port=self.node.port,

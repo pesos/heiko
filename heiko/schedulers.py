@@ -11,8 +11,14 @@ from heiko.utils.load import NodeDetails
 
 class BasicScheduler:
     """A very simple scheduler that uses a priority queue to iterate through the avaiable nodes
-    and tried to run the FIRST JOB on one node. If the node fails, the scheduler tries the next
-    available node and so on."""
+    and tries to run the FIRST JOB on one node. If the node fails, the scheduler tries the next
+    available node and so on.
+    
+    The nodes are sorted based on :py:class:`heiko.utils.load.NodeDetails`.
+
+    :param config: configuration object
+    :type config: :py:class:`heiko.config.Config`.
+    """
 
     def __init__(self, config: Config):
         self.config = config
@@ -25,13 +31,22 @@ class BasicScheduler:
         logging.info("Node list: %s", [(*n[:2], n[2].name) for n in self.nodelist])
 
     def nodeDetail(self, node):
-        # print("Node = ", node)
+        """Adds a new node to the nodelist with its details
+
+        :param node: node to add
+        :type node: :py:class:`heiko.config.Node`.
+        """
         details = NodeDetails(node=node)
         self.updateNode(details)
 
         self.nodelist.append([1, details, node])
 
     def updateNode(self, detail: NodeDetails):
+        """Updates details of a node
+
+        :param detail: details of the node to be updated
+        :type detail: :py:class:`heiko.utils.load.NodeDetails`
+        """
         try:
             asyncio.get_event_loop().run_until_complete(detail.getDetails())
         except (asyncssh.DisconnectError, ConnectionError, OSError) as e:
@@ -39,6 +54,8 @@ class BasicScheduler:
             logging.error("Could not get details of node %s", detail.node.name)
 
     def run(self):
+        """Runs the scheduler until interrupted.
+        """
         while True:
             node = heapq.heappop(self.nodelist)
             try:
@@ -55,7 +72,7 @@ class BasicScheduler:
                 self.updateNode(node[1])
 
                 for other_node in self.nodelist:
-                    self.updateNode(node[1])
+                    self.updateNode(other_node[1])
 
                 heapq.heapify(self.nodelist)
                 heapq.heappush(self.nodelist, node)

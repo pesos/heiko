@@ -14,6 +14,13 @@ class HeikoSSHClientSession(asyncssh.SSHClientSession):
 
 
 async def run_client(node: Node, job: Job):
+    """Runs given job on given node
+
+    :param node: node to run on
+    :type node: :py:class:`heiko.config.Node`
+    :param job: job to run
+    :type job: :py:class:`heiko.config.Job`
+    """
     async with asyncssh.connect(
         node.host, port=node.port, username=node.username, password=node.password
     ) as conn:
