@@ -17,7 +17,7 @@ From Git
 1. Clone the repository using ``git clone``
 2. Go to the repository directory ``cd heiko``
 3. (optional) setup a virtualenv or venv
-4. Install heiko using ``pip install setup.py``
+4. Install heiko using ``pip install .``
 5. Check if install succeeded by typing ``heiko --help`` in the command line
 
 Usage

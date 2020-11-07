@@ -10,6 +10,7 @@ import logging
 from typing import Iterator
 
 
+import heiko
 from heiko.daemon import Daemon
 from heiko.main import main
 from heiko.utils.load import NodeDetails
@@ -49,6 +50,12 @@ def make_parser():
         name for a daemon that you can specify.
         """),
         formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser_.add_argument(
+        "-v", "--version", help="Print heiko version",
+        default=False,
+        action="store_true",
+        dest="version"
     )
     subparsers = parser_.add_subparsers(dest="command")
 
@@ -132,8 +139,11 @@ def cli():
     heiko_home = Path.home() / ".config" / "heiko"
     os.makedirs(heiko_home, exist_ok=True)
 
+    if args.version:
+        print("heiko version:", heiko.__version__)
+
     # list running daemons
-    if args.command == "list":
+    elif args.command == "list":
         pid_files = glob.glob(str(heiko_home / "*.pid"))
         # store PIDs
         pids = []
