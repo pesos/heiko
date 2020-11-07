@@ -13,6 +13,7 @@ class NodeDetails:
     :param node: node to store details of
     :type node: :py:class:`heiko.config.Node`.
     """
+
     def __init__(self, node: Node):
         self.node = node
 
@@ -84,8 +85,7 @@ class NodeDetails:
                 self.cpu["cpu_mhz"] = float(field["data"])
 
     async def getDetails(self):
-        """Gets and saves all details of the node
-        """
+        """Gets and saves all details of the node"""
         async with asyncssh.connect(
             self.node.host,
             port=self.node.port,

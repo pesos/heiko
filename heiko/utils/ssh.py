@@ -5,8 +5,8 @@ from heiko.config import Node, Job
 
 
 class HeikoSSHClientSession(asyncssh.SSHClientSession):
-    """A class to handle SSH connections cleanly
-    """
+    """A class to handle SSH connections cleanly"""
+
     def data_received(self, data, datatype):
         """Prints the received data directly"""
         print(data, end="")

@@ -10,6 +10,7 @@ except ImportError:
 
 CONFIG_LOCATION = os.path.join(os.getcwd(), ".config/heiko.yml")
 
+
 @dataclass
 class Node:
     """Class to store data about a single node"""
@@ -27,6 +28,7 @@ class Job:
 
     name: str
     commands: List
+
 
 class Config:
     """Class to read and parse configuration files file(s)

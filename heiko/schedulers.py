@@ -13,7 +13,7 @@ class BasicScheduler:
     """A very simple scheduler that uses a priority queue to iterate through the avaiable nodes
     and tries to run the FIRST JOB on one node. If the node fails, the scheduler tries the next
     available node and so on.
-    
+
     The nodes are sorted based on :py:class:`heiko.utils.load.NodeDetails`.
 
     :param config: configuration object
@@ -54,8 +54,7 @@ class BasicScheduler:
             logging.error("Could not get details of node %s", detail.node.name)
 
     def run(self):
-        """Runs the scheduler until interrupted.
-        """
+        """Runs the scheduler until interrupted."""
         while True:
             node = heapq.heappop(self.nodelist)
             try:

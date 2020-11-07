@@ -27,6 +27,7 @@ class HeikoDaemon(Daemon):
     def run(self):
         main()
 
+
 # Parse CLI args
 def make_parser():
     """Creates an ArgumentParser, configures and returns it.
@@ -37,7 +38,8 @@ def make_parser():
     """
     parser_ = argparse.ArgumentParser(
         prog="heiko",
-        description=textwrap.dedent("""
+        description=textwrap.dedent(
+            """
         heiko is a lightweight load balancer to manage servers
         running on low-end hardware such as Raspberry Pis or mobile phones.\n
 
@@ -48,14 +50,17 @@ def make_parser():
 
         Most subcommands of this tool require a --name argument which is a unique
         name for a daemon that you can specify.
-        """),
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        """
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser_.add_argument(
-        "-v", "--version", help="Print heiko version",
+        "-v",
+        "--version",
+        help="Print heiko version",
         default=False,
         action="store_true",
-        dest="version"
+        dest="version",
     )
     subparsers = parser_.add_subparsers(dest="command")
 
