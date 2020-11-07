@@ -2,6 +2,7 @@ import os
 import time
 import sys
 import argparse
+import textwrap
 from pathlib import Path
 import glob
 import asyncio
@@ -25,7 +26,6 @@ class HeikoDaemon(Daemon):
     def run(self):
         main()
 
-
 # Parse CLI args
 def make_parser():
     """Creates an ArgumentParser, configures and returns it.
@@ -34,7 +34,22 @@ def make_parser():
 
     :rtype: :py:class:`argparse.ArgumentParser`
     """
-    parser_ = argparse.ArgumentParser(prog="heiko")
+    parser_ = argparse.ArgumentParser(
+        prog="heiko",
+        description=textwrap.dedent("""
+        heiko is a lightweight load balancer to manage servers
+        running on low-end hardware such as Raspberry Pis or mobile phones.\n
+
+        This command-line tool of heiko lets you manage daemons. A heiko daemon
+        runs a program on your configured nodes.
+
+        Refer the quickstart section of the documentation for setting it up.
+
+        Most subcommands of this tool require a --name argument which is a unique
+        name for a daemon that you can specify.
+        """),
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     subparsers = parser_.add_subparsers(dest="command")
 
     parser_run = subparsers.add_parser("start", help="Starts heiko daemon")
