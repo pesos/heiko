@@ -1,9 +1,13 @@
 # heiko
 
-heiko is a lightweight load balancer that uses ssh to manage servers running on low-end hardware such as raspberry pis or even phones
+heiko is a lightweight load balancer that uses SSH to manage servers running on low-end hardware such as Raspberry Pis or even phones
 
-heiko stands for "equilibrium" in japanese
+heiko stands for *equilibrium* in Japanese.
 
-create a config.yaml file as .config/heiko.yml
-a sample config file is given in sample-config.yml
+# Installation and Usage
 
+Check out the [quickstart](https://heiko.readthedocs.io/en/latest/quickstart.html) section of the documentation.
+
+# License
+
+heiko uses [Apache License 2.0](LICENSE)
