@@ -9,7 +9,9 @@ Installation
 From PyPI
 ^^^^^^^^^
 
-Coming soon
+::
+
+    pip install py-heiko
 
 From Git
 ^^^^^^^^

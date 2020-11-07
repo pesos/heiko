@@ -9,7 +9,7 @@ tmp/
 *.egg-info
 build
 htmlcov
-
+dist
 env/
 
 .config/
