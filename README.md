@@ -33,7 +33,15 @@ Check if the installation succeeded
 heiko --help
 ```
 
-Check out the [quickstart](https://heiko.readthedocs.io/en/latest/quickstart.html) section of the documentation.
+Check out the [quickstart](https://heiko.readthedocs.io/en/latest/quickstart.html) section of the documentation for usage and more information.
+
+# Features
+
+- [X] Configuring nodes using YAML.
+- [X] Nodes require only ssh to work.
+- [X] Scheduler ranks nodes based on node specifications, also uses load and free memory to decide which node to use.
+- [ ] Run multiple jobs across nodes.
+- [ ] Test heiko on a single machine.
 
 # License
 
