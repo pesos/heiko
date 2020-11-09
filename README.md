@@ -1,6 +1,7 @@
 # heiko
 
 [![Documentation Status](https://readthedocs.org/projects/browser-history/badge/?version=latest)](https://browser-history.readthedocs.io/en/latest/?badge=latest)
+[![PyPI version](https://badge.fury.io/py/py-heiko.svg)](https://badge.fury.io/py/py-heiko)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ```heiko``` is a lightweight load balancer that uses SSH to manage servers running on
