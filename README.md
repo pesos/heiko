@@ -1,6 +1,6 @@
 # heiko
 
-[![Documentation Status](https://readthedocs.org/projects/browser-history/badge/?version=latest)](https://browser-history.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/heiko/badge/?version=latest)](https://heiko.readthedocs.io/en/latest/?badge=latest)
 [![PyPI version](https://badge.fury.io/py/py-heiko.svg)](https://badge.fury.io/py/py-heiko)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
