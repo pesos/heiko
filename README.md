@@ -24,7 +24,7 @@ pip install py-heiko
 
 Installation from source
 ```
-git clone https://github.com/psiayn/heiko.git
+git clone https://github.com/pesos/heiko.git
 cd heiko
 pip install .
 ```

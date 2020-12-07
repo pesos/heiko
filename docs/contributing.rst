@@ -41,7 +41,7 @@ Development Process - Long Version
 
    * ``git clone https://github.com/<your-github-username>/heiko.git``
    * Add a remote to the original repository and name it ``upstream``.
-   * ``git remote add upstream https://github.com/psiayn/heiko.git``
+   * ``git remote add upstream https://github.com/pesos/heiko.git``
 
 #. Work on the master branch for smaller patches and a separate branch for new features.
 
@@ -82,7 +82,7 @@ Development Process - Long Version
 
 #. Use the GitHub website to create a Pull Request and wait for the maintainers to review it.
 
-   * Visit your forked repository and click on "Pull Request". The Pull Request must always be made to the ``psiayn/master`` branch.
+   * Visit your forked repository and click on "Pull Request". The Pull Request must always be made to the ``pesos/master`` branch.
      Add the relevant description, ensure that you link the original issue.
    * The maintainers will review your code and see if it is okay to merge. It is quite normal for them to suggest you to make some changes in this review.
    * If you are asked to make changes, all you need to do is::

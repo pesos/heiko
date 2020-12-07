@@ -11,7 +11,7 @@ setuptools.setup(
     description="A fancy load balancer for light weight devices",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/psiayn/heiko",
+    url="https://github.com/pesos/heiko",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
