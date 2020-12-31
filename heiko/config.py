@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 import yaml
 
@@ -18,8 +18,8 @@ class Node:
     name: str
     host: str
     username: str
-    password: str
-    port: str
+    password: Optional[str] = None
+    port: int = 22
 
 
 @dataclass
