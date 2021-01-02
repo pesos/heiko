@@ -13,6 +13,6 @@ dist
 env/
 
 .config/
-
+temp/config.yml
 # documentation files
 docs/_build
