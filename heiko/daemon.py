@@ -78,7 +78,7 @@ class Daemon:
                 pid = int(pf.read().strip())
         except IOError:
             pid = None
-        if not psutil.pid_exists(pid):
+        if pid is not None and not psutil.pid_exists(pid):
             pid = None
         return pid
 
