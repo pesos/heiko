@@ -42,7 +42,8 @@ Check out the [quickstart](https://heiko.readthedocs.io/en/latest/quickstart.htm
 - [X] Nodes require only ssh to work.
 - [X] Scheduler ranks nodes based on node specifications, also uses load and free memory to decide which node to use.
 - [ ] Run multiple jobs across nodes.
-- [ ] Test heiko on a single machine.
+- [X] Test heiko on a single machine.
+- [X] Sync files from master to nodes (requires rsync installed on both master and nodes). Ignore files to be synced with rsync-ignore
 
 # License
 

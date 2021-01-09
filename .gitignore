@@ -13,6 +13,10 @@ dist
 env/
 
 .config/
+.heiko/
 temp/config.yml
 # documentation files
 docs/_build
+structure
+temp/test*
+.python-version

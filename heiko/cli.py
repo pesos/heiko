@@ -16,6 +16,7 @@ from heiko.daemon import Daemon
 from heiko.main import main
 from heiko.utils.load import NodeDetails
 from heiko.config import Config, CONFIG_LOCATION
+from heiko.utils.sync import sync_folder
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)s: %(message)s",
@@ -181,6 +182,8 @@ def cli():
                 print("CPU:\n", utils.cpu)
                 print("\nRAM:\n", utils.mem)
                 print("\nCPU Usage:\n", utils.load)
+                print("Syncing files .........")
+                sync_folder(node)
             except Exception as e:
                 logging.error("%s", e)
 

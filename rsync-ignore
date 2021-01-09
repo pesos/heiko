@@ -1,0 +1,5 @@
+.heiko/
+.env/
+.python-version
+.vim/
+rsync-ignore

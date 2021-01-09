@@ -47,7 +47,7 @@ for i in range(num_nodes):
 
 print()
 print("YAML CONFIG")
-genYAML("config.yml", nodes, command)
+genYAML(config_path, nodes, command)
     
 def cleanup():
     print("Stopping containers .........")
