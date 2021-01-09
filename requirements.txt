@@ -6,3 +6,4 @@ PyNaCl==1.4.0
 PyYAML==5.3.1
 six==1.15.0
 asyncssh==2.4.1
+psutil==5.8.0

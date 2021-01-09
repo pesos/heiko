@@ -9,6 +9,7 @@ import asyncio
 import logging
 from typing import Iterator
 
+import psutil
 
 import heiko
 from heiko.daemon import Daemon
@@ -140,9 +141,10 @@ def cli():
     """
     args = parser.parse_args()
 
-    # Get config directory
-    heiko_home = Path.home() / ".config" / "heiko"
-    os.makedirs(heiko_home, exist_ok=True)
+    # Get heiko directory - to save .out and .pid files
+    heiko_home = Path.home() / ".heiko"
+    heiko_processes = heiko_home / "processes"
+    os.makedirs(heiko_processes, exist_ok=True)
 
     if args.version:
         print("heiko version:", heiko.__version__)
@@ -163,7 +165,8 @@ def cli():
         print("Currently running daemons:")
         print("name\tPID")
         for name, pid in zip(names, pids):
-            print(f"{name}\t{pid}")
+            if psutil.pid_exists(int(pid)):
+                print(f"{name}\t{pid}")
 
     elif args.command == "init":
 

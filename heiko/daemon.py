@@ -4,6 +4,8 @@ import time
 import atexit
 from signal import SIGTERM
 
+import psutil
+
 
 class Daemon:
     """
@@ -63,7 +65,8 @@ class Daemon:
         # write pidfile
         atexit.register(self.delpid)
         pid = str(os.getpid())
-        open(self.pidfile, "w+").write("%s\n" % pid)
+        with open(self.pidfile, "w+") as f:
+            f.write("%s\n" % pid)
 
     def delpid(self):
         os.remove(self.pidfile)
@@ -74,6 +77,8 @@ class Daemon:
             with open(self.pidfile, "r") as pf:
                 pid = int(pf.read().strip())
         except IOError:
+            pid = None
+        if not psutil.pid_exists(pid):
             pid = None
         return pid
 

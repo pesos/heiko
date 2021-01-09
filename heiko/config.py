@@ -8,7 +8,8 @@ try:
 except ImportError:
     from yaml import Loader
 
-CONFIG_LOCATION = os.path.join(os.getcwd(), ".config/heiko.yml")
+HEIKO_LOCAL_HOME = os.path.join(os.getcwd(), ".heiko")
+CONFIG_LOCATION = os.path.join(HEIKO_LOCAL_HOME, "config.yml")
 
 
 @dataclass
