@@ -1,6 +1,6 @@
 import os
 from typing import List, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import yaml
 
 try:
@@ -10,6 +10,7 @@ except ImportError:
 
 HEIKO_LOCAL_HOME = os.path.join(os.getcwd(), ".heiko")
 CONFIG_LOCATION = os.path.join(HEIKO_LOCAL_HOME, "config.yml")
+_, CURDIR_NAME = os.path.split(os.getcwd())
 
 
 @dataclass
@@ -29,6 +30,7 @@ class Job:
 
     name: str
     commands: List
+    init: List = field(default_factory=list)
 
 
 class Config:
@@ -40,7 +42,7 @@ class Config:
         default is ``./.config/heiko.yml``.
     """
 
-    def __init__(self, config_file=None):
+    def __init__(self, name, config_file=None):
         if config_file is None:
             config_file = CONFIG_LOCATION
 
@@ -53,6 +55,9 @@ class Config:
 
         self.jobs = []
         for job in self.config["jobs"]:
+            job["commands"].insert(0, f"cd ~/.heiko/{name}")
+            if "init" in job:
+                job["init"].insert(0, f"cd ~/.heiko/{name}")
             self.jobs.append(Job(**job))
 
     @property

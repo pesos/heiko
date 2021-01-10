@@ -1,7 +1,8 @@
 import sys
 import asyncssh
+from typing import List
 
-from heiko.config import Node, Job
+from heiko.config import Node
 
 
 class HeikoSSHClientSession(asyncssh.SSHClientSession):
@@ -17,7 +18,7 @@ class HeikoSSHClientSession(asyncssh.SSHClientSession):
             print("SSH session error: " + str(exc), file=sys.stderr)
 
 
-async def run_client(node: Node, job: Job):
+async def run_client(node: Node, commands: List):
     """Runs given job on given node
 
     :param node: node to run on
@@ -29,6 +30,6 @@ async def run_client(node: Node, job: Job):
         node.host, port=node.port, username=node.username, password=node.password
     ) as conn:
         chan, session = await conn.create_session(
-            HeikoSSHClientSession, "; ".join(job.commands)
+            HeikoSSHClientSession, "; ".join(commands)
         )
         await chan.wait_closed()

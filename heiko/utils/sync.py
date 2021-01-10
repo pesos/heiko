@@ -2,13 +2,27 @@ import subprocess
 import os
 from heiko.config import Node
 
-def sync_folder(node: Node):
-    pwd = os.getcwd()
-    if node.password:
-        subprocess.run(["sshpass", "-p", node.password, 
-                "rsync", "-a", "-e", f"ssh -p {node.port}", "-v", "--exclude-from=rsync-ignore",
-                pwd, f"{node.username}@{node.host}:~/.heiko/"])
-    else:
-        subprocess.run(["rsync", "-a", "-e", f"ssh -p {node.port}", "-v", "--exclude-from=rsync-ignore",
-                pwd, f"{node.username}@{node.host}:~/.heiko/"])
+IGNORE_FILE = ".heiko/rsync-ignore"
 
+
+def sync_folder(name: str, node: Node):
+    pwd = os.getcwd()
+
+    command = [
+        "rsync",
+        "-a",
+        "--info=progress2",
+        "-e",
+        f"ssh -p {node.port}",
+        pwd + "/",
+        f"{node.username}@{node.host}:~/.heiko/{name}",
+    ]
+
+    if os.path.isfile(os.path.join(pwd, IGNORE_FILE)):
+        exclude = f"--exclude-from={IGNORE_FILE}"
+        command.insert(-2, exclude)  # add exclude before source dir name
+
+    if node.password:
+        subprocess.run(["sshpass", "-p", node.password, *command])
+    else:
+        subprocess.run(command)

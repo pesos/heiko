@@ -3,8 +3,8 @@ from heiko.config import Config
 import heiko.schedulers as schedulers
 
 
-def main():
-    config = Config()
+def main(name):
+    config = Config(name)
     sched = schedulers.BasicScheduler(config)
     sched.run()
 

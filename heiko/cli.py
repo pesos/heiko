@@ -15,8 +15,9 @@ import heiko
 from heiko.daemon import Daemon
 from heiko.main import main
 from heiko.utils.load import NodeDetails
-from heiko.config import Config, CONFIG_LOCATION
+from heiko.config import Config
 from heiko.utils.sync import sync_folder
+from heiko.utils.ssh import run_client
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)s: %(message)s",
@@ -26,8 +27,12 @@ logging.basicConfig(
 
 
 class HeikoDaemon(Daemon):
+    def __init__(self, name, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = name
+
     def run(self):
-        main()
+        main(self.name)
 
 
 # Parse CLI args
@@ -85,6 +90,9 @@ def make_parser():
 
     parser_init = subparsers.add_parser(
         "init", help="initialize and benchmark all nodes"
+    )
+    parser_init.add_argument(
+        "--name", help="a unique name for the daemon", required=True
     )
 
     parser_logs = subparsers.add_parser("logs", help="view logs of a daemon")
@@ -170,8 +178,11 @@ def cli():
                 print(f"{name}\t{pid}")
 
     elif args.command == "init":
+        if "name" not in args:
+            parser.print_usage()
+            sys.exit(1)
 
-        c = Config(CONFIG_LOCATION)
+        c = Config(args.name)
 
         for node in c.nodes:
             # Initialization and Benchmarking
@@ -183,7 +194,11 @@ def cli():
                 print("\nRAM:\n", utils.mem)
                 print("\nCPU Usage:\n", utils.load)
                 print("Syncing files .........")
-                sync_folder(node)
+                sync_folder(args.name, node)
+
+                asyncio.get_event_loop().run_until_complete(
+                    run_client(node, c.first_job.init)
+                )
             except Exception as e:
                 logging.error("%s", e)
 
@@ -208,6 +223,7 @@ def cli():
 
         # Manage daemon
         daemon = HeikoDaemon(
+            args.name,
             heiko_home / f"heiko_{args.name}.pid",
             stdout=heiko_home / f"heiko_{args.name}.out",
             stderr=heiko_home / f"heiko_{args.name}.out",

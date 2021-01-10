@@ -60,7 +60,7 @@ class BasicScheduler:
             try:
                 logging.info("Running on client %s", node[2].name)
                 asyncio.get_event_loop().run_until_complete(
-                    run_client(node[2], self.config.first_job)
+                    run_client(node[2], self.config.first_job.commands)
                 )
             except Exception as exc:
                 logging.error("Got error %s", exc)
