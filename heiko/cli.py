@@ -196,9 +196,10 @@ def cli():
                 print("Syncing files .........")
                 sync_folder(args.name, node)
 
-                asyncio.get_event_loop().run_until_complete(
-                    run_client(node, c.first_job.init)
-                )
+                if c.first_job.init:
+                    asyncio.get_event_loop().run_until_complete(
+                        run_client(node, c.first_job.init)
+                    )
             except Exception as e:
                 logging.error("%s", e)
 

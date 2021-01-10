@@ -1,11 +1,18 @@
 import subprocess
 import os
+
+import asyncio
+
 from heiko.config import Node
+from heiko.utils.ssh import run_client
 
 IGNORE_FILE = ".heiko/rsync-ignore"
 
 
 def sync_folder(name: str, node: Node):
+    # make ~/.heiko folder if it doesn't exist
+    asyncio.get_event_loop().run_until_complete(run_client(node, ["mkdir -p ~/.heiko"]))
+
     pwd = os.getcwd()
 
     command = [
