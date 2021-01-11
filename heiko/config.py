@@ -39,7 +39,7 @@ class Config:
     The configuration files should be plain YAML files.
 
     :param config_file: location of configuration file.
-        default is ``./.config/heiko.yml``.
+        default is ``./.heiko/config.yml``.
     """
 
     def __init__(self, name, config_file=None):
