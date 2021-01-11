@@ -66,7 +66,7 @@ run over SSH.
    repository) to the newly created ``.heiko``.
    ::
 
-        cp sample-config.yml .heiko/sample-config.yml
+        cp sample-config.yml .heiko/config.yml
 
 4. Open ``.heiko/config.yml`` in your favourite editor and fill in the required
    information for all nodes and jobs (the examples should be self-explanatory).
