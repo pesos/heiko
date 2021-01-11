@@ -4,7 +4,7 @@ Contributing
 Development Dependencies
 ------------------------
 
-#. Python 3 (versions 3.7 to 3.8 are currently supported)
+#. Python 3 (versions 3.7 to 3.9 are currently supported)
 #. To test out heiko you need a system with SSH set up on it. You can do it locally (on localhost) but it is preferred to have a different
    device (such as mobile phone or Raspberry Pi) to test it on. You can use any non-terminating program such as ``cat`` or ``tail -f`` to
    test out heiko.
