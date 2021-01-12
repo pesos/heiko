@@ -21,6 +21,7 @@ class Node:
     host: str
     username: str
     password: Optional[str] = None
+    hostname: Optional[str] = None
     port: int = 22
 
 
@@ -31,6 +32,14 @@ class Job:
     name: str
     commands: List
     init: List = field(default_factory=list)
+
+
+@dataclass
+class HTTPConfig:
+    """Class to store HTTP server configuration"""
+
+    enabled: bool
+    port: int = 80
 
 
 class Config:
@@ -49,9 +58,19 @@ class Config:
         with open(config_file, "rt") as stream:
             self.config = yaml.load(stream, Loader=Loader)
 
+        if "http_server" in self.config:
+            self.http = HTTPConfig(**self.config["http_server"])
+        else:
+            self.http = HTTPConfig(False)
+
         self.nodes = []
         for node in self.config["nodes"]:
-            self.nodes.append(Node(**node))
+            n = Node(**node)
+            if n.hostname is None:
+                n.hostname = n.host
+            if self.http.enabled:
+                n.hostname = f"{n.hostname}:{self.http.port}/"
+            self.nodes.append(n)
 
         self.jobs = []
         for job in self.config["jobs"]:

@@ -7,6 +7,7 @@ import asyncssh
 from heiko.config import Config
 from heiko.utils.ssh import run_client
 from heiko.utils.load import NodeDetails
+from heiko.server import set_host, reset_host
 
 
 class BasicScheduler:
@@ -59,12 +60,16 @@ class BasicScheduler:
             node = heapq.heappop(self.nodelist)
             try:
                 logging.info("Running on client %s", node[2].name)
+                if self.config.http.enabled:
+                    set_host(node[2].hostname)
                 asyncio.get_event_loop().run_until_complete(
                     run_client(node[2], self.config.first_job.commands)
                 )
             except Exception as exc:
                 logging.error("Got error %s", exc)
             finally:
+                if self.config.http.enabled:
+                    reset_host()
                 if float(node[0]) <= 10:
                     node[0] = node[0] * 2
                 time.sleep(node[0])
