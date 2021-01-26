@@ -8,12 +8,13 @@ RUN apt install openssh-server vim sudo -y
 RUN echo 'root:yabe' | chpasswd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
 
+RUN useradd -rm -d /home/test -s /bin/bash -u 1000 -G sudo test
+
+RUN echo 'test:yabe' | chpasswd
+
+# change user to test
+USER test
+WORKDIR /home/test
+
 # start ssh service
-# create a test user which is not root
-# set password for test user
-# switch user
-ENTRYPOINT  echo yabe | sudo -S service ssh restart && \
-            useradd -rm -d /home/test -s /bin/bash -u 1000 test && \
-            echo 'test:yabe' | chpasswd && \
-            su test && \
-            bash
+ENTRYPOINT  echo yabe | sudo -S service ssh restart && bash
