@@ -30,7 +30,7 @@ Requirements
    Requirements of a master are:
 
    - Linux or Unix based OS
-   - Python 3.6+
+   - Python 3.7+
    - ``heiko`` installed (from above)
    - SSH client
    - rsync client
