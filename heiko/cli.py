@@ -8,6 +8,7 @@ import glob
 import asyncio
 import logging
 from typing import Iterator
+import subprocess
 
 import psutil
 
@@ -119,28 +120,20 @@ def make_parser():
 parser = make_parser()
 
 
-def follow(file) -> Iterator[str]:
+def follow(file_path: str) -> Iterator[str]:
     """Yields each line in a file as they are written
-    (or yields when more than 5 characters have been written)
 
-    :param file: file handle to read
-    :type file: file handle
-    :yield: a newline terminated line or a string of 5 characters
+    :param file_path: path to log file to be followed
+    :type file_path: str
+    :yield: a newline terminated line
     :rtype: Iterator[str]
     """
-    line = ""
-    i = 0
+
+    f = subprocess.Popen(
+        ["tail", "-F", file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
     while True:
-        tmp = file.readline()
-        if tmp is not None:
-            line += tmp
-            i += 1
-            if line.endswith("\n") or i >= 5:
-                yield line
-                line = ""
-                i = 0
-        else:
-            time.sleep(0.1)
+        yield f.stdout.readline().decode()
 
 
 def cli():
@@ -209,13 +202,14 @@ def cli():
         if args.clear:
             # clear file before reading (opening in w mode clears the file)
             mode = "wt+"
-        with open(heiko_home / f"heiko_{args.name}.out", mode) as f:
-            if args.follow:
-                # follow log as it is written
-                for line in follow(f):
-                    print(line, end="")
-            else:
-                # read whole log at once
+        if args.follow:
+            # follow log as it is written
+            path_to_log = heiko_home / f"heiko_{args.name}.out"
+            for line in follow(path_to_log):
+                print(line, end="")
+        else:
+            # read whole log at once
+            with open(heiko_home / f"heiko_{args.name}.out", mode) as f:
                 print(f.read())
     else:
         if "name" not in args:
