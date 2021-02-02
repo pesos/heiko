@@ -120,20 +120,19 @@ def make_parser():
 parser = make_parser()
 
 
-def follow(file_path: str) -> Iterator[str]:
-    """Yields each line in a file as they are written
+def name_exists(path_to_log: str) -> bool:
+    return Path(path_to_log).is_file()
+
+
+def follow(file_path: str):
+    """Follow a file line-by-line, as and when they are written
 
     :param file_path: path to log file to be followed
     :type file_path: str
-    :yield: a newline terminated line
-    :rtype: Iterator[str]
     """
-
-    f = subprocess.Popen(
-        ["tail", "-F", file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    subprocess.check_call(
+        ["tail", "-f", file_path], stdout=sys.stdout, stderr=sys.stderr
     )
-    while True:
-        yield f.stdout.readline().decode()
 
 
 def cli():
@@ -197,19 +196,20 @@ def cli():
                 logging.error("%s", e)
 
     elif args.command == "logs":
+        path_to_log = heiko_home / f"heiko_{args.name}.out"
+        if not name_exists(path_to_log):
+            raise Exception("name for the heiko daemon provided does not exist")
+
         # read logs
         mode = "rt"
         if args.clear:
             # clear file before reading (opening in w mode clears the file)
             mode = "wt+"
         if args.follow:
-            # follow log as it is written
-            path_to_log = heiko_home / f"heiko_{args.name}.out"
-            for line in follow(path_to_log):
-                print(line, end="")
+            follow(path_to_log)
         else:
             # read whole log at once
-            with open(heiko_home / f"heiko_{args.name}.out", mode) as f:
+            with open(path_to_log, mode) as f:
                 print(f.read())
     else:
         if "name" not in args:
