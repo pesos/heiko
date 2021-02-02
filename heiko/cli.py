@@ -120,7 +120,7 @@ def make_parser():
 parser = make_parser()
 
 
-def name_exists(path_to_log: str) -> bool:
+def file_exists(path_to_log: str) -> bool:
     """Checks if Heiko Daemon name exists or not
 
     Existence of daemon name is done by checking if the 
@@ -206,7 +206,7 @@ def cli():
 
     elif args.command == "logs":
         path_to_log = heiko_home / f"heiko_{args.name}.out"
-        if not name_exists(path_to_log):
+        if not file_exists(path_to_log):
             raise Exception("name for the heiko daemon provided does not exist")
 
         # read logs
