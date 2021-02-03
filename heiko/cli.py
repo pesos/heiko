@@ -120,17 +120,14 @@ def make_parser():
 parser = make_parser()
 
 
-def file_exists(path_to_log: str) -> bool:
-    """Checks if Heiko Daemon name exists or not
+def file_exists(file_path: str) -> bool:
+    """Checks if a file exists at `file_path`
 
-    Existence of daemon name is done by checking if the
-    corresponding log file exists.
-
-    :param path_to_log: path to where log file should exist
-    :type path_to_log: str
+    :param file_path: path to file whose existence is being checked.
+    :type file_path: str
     :rtype: bool
     """
-    return Path(path_to_log).is_file()
+    return Path(file_path).is_file()
 
 
 def follow(file_path: str):
