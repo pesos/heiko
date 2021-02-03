@@ -8,6 +8,7 @@ import glob
 import asyncio
 import logging
 from typing import Iterator
+import subprocess
 
 import psutil
 
@@ -119,28 +120,25 @@ def make_parser():
 parser = make_parser()
 
 
-def follow(file) -> Iterator[str]:
-    """Yields each line in a file as they are written
-    (or yields when more than 5 characters have been written)
+def file_exists(file_path: str) -> bool:
+    """Checks if a file exists at `file_path`
 
-    :param file: file handle to read
-    :type file: file handle
-    :yield: a newline terminated line or a string of 5 characters
-    :rtype: Iterator[str]
+    :param file_path: path to file whose existence is being checked.
+    :type file_path: str
+    :rtype: bool
     """
-    line = ""
-    i = 0
-    while True:
-        tmp = file.readline()
-        if tmp is not None:
-            line += tmp
-            i += 1
-            if line.endswith("\n") or i >= 5:
-                yield line
-                line = ""
-                i = 0
-        else:
-            time.sleep(0.1)
+    return Path(file_path).is_file()
+
+
+def follow(file_path: str):
+    """Follow a file line-by-line, as and when they are written
+
+    :param file_path: path to log file to be followed
+    :type file_path: str
+    """
+    subprocess.check_call(
+        ["tail", "-f", file_path], stdout=sys.stdout, stderr=sys.stderr
+    )
 
 
 def cli():
@@ -204,18 +202,20 @@ def cli():
                 logging.error("%s", e)
 
     elif args.command == "logs":
+        path_to_log = heiko_home / f"heiko_{args.name}.out"
+        if not file_exists(path_to_log):
+            raise Exception("name for the heiko daemon provided does not exist")
+
         # read logs
         mode = "rt"
         if args.clear:
             # clear file before reading (opening in w mode clears the file)
             mode = "wt+"
-        with open(heiko_home / f"heiko_{args.name}.out", mode) as f:
-            if args.follow:
-                # follow log as it is written
-                for line in follow(f):
-                    print(line, end="")
-            else:
-                # read whole log at once
+        if args.follow:
+            follow(path_to_log)
+        else:
+            # read whole log at once
+            with open(path_to_log, mode) as f:
                 print(f.read())
     else:
         if "name" not in args:
