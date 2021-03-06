@@ -24,8 +24,6 @@ class NodeDetails:
         self._ram_free_pattern = re.compile(r"MemFree:.*?(\d+)")
         self._ram_total_pattern = re.compile(r"MemTotal:.*?(\d+)")
 
-        self._load_pattern = re.compile(r"load average: \d+\.\d+, (\d+\.\d+), \d+\.\d+")
-
         self.cpu = {"cpus": -1, "cpu_mhz": -1}
         self.load = 100
         self.mem = {"total_mem": -1, "free_mem": -1}
@@ -41,16 +39,14 @@ class NodeDetails:
         logging.info("Fetching ram of node %s", self.node.name)
         return ram
 
-    # TODO: check if a way exists to get the usage information
-    # without using the `uptime` binary.
     async def getCpuUsage(self, conn):
-        """Gets CPU usage (load average) of the node using the ``uptime`` command.
+        """Gets CPU usage (load average) of the node using the ``/proc/loadavg`` file.
 
         :param conn: asynchssh connection object
         :return: output of the command
         :rtype: str
         """
-        usage = await conn.run("uptime", check=True)
+        usage = await conn.run("cat /proc/loadavg", check=True)
         logging.info("Fetching CPU Usage of node %s", self.node.name)
         return usage
 
@@ -78,10 +74,10 @@ class NodeDetails:
 
     def parseLoad(self, load):
         load = load.stdout
-        self.load = float(self._load_pattern.findall(load)[0])
+        self.load = float(load.split()[1])
 
     def parseCpuInfo(self, info):
-        info = info.split()
+        info = info.stdout.split()
         len_info = len(info)
 
         # Upto index `current_freq_boundary` will be values

@@ -16,5 +16,8 @@ RUN echo 'test:yabe' | chpasswd
 USER test
 WORKDIR /home/test
 
+# install rsync
+RUN echo yabe | sudo -S apt-get install rsync -y
+
 # start ssh service
 ENTRYPOINT  echo yabe | sudo -S service ssh restart && bash
