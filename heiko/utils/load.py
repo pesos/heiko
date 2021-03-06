@@ -18,7 +18,7 @@ class NodeDetails:
         self.node = node
 
         # regexes:
-        #   two different patters for free and total memory to account for the
+        #   two different patterns for free and total memory to account for the
         #   fact that the order in which they appear in /proc/meminfo might not
         #   be fixed.
         self._ram_free_pattern = re.compile(r"MemFree:.*?(\d+)")
