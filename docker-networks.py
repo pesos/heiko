@@ -65,9 +65,7 @@ args = parser.parse_args()
 n = int(args.number_of_nodes)
 c = args.config
 config = Config(n, c)
-# num_nodes = sys.argv[1]
-# config_path = sys.argv[2]
-# num_nodes = int(num_nodes)
+
 name = "heiko_node"
 nodes = list()
 print("Starting containers ..........")
@@ -85,8 +83,6 @@ for i in range(config.num_nodes):
 print("Network extraction")
 out = subprocess.check_output(["docker", "network", "inspect", "bridge"])
 network = json.loads(out)
-# print(network)
-# print(network[0]['Containers'])
 
 for i in range(config.num_nodes):
     node_name = name + str(i)
