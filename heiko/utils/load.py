@@ -87,15 +87,14 @@ class NodeDetails:
         # Upto index `current_freq_boundary` will be values
         # indicating current frequencing of each logical CPU
         # in kHz
-        current_freq_boundary = int(len_info / 2)
+        current_freq_boundary = len_info // 2
 
         # The `info` list contains information about
         # the current frequencies of each logical CPU
         # as well as the maximum CPU frequency per logical
-        # core. Therefore, the total number of entries in
+        # CPU. Therefore, the total number of entries in
         # this list will be 2 times the number of logical
-        # CPUs and the number of CPUs can be calculated as 
-        # below.
+        # CPUs.
         num_cpus = len_info // 2
 
         # Get the current frequencies of all CPUs in MHz
