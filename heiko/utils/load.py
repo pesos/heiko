@@ -58,8 +58,7 @@ class NodeDetails:
         :rtype: str
         """
         cpu = await conn.run(
-            "cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq && "
-            + "cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_max_freq",
+            "cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_max_freq",
             check=True,
         )
         logging.info("Fetching CPU details of node %s", self.node.name)
@@ -80,33 +79,17 @@ class NodeDetails:
         info = info.stdout.split()
         len_info = len(info)
 
-        # Upto index `current_freq_boundary` will be values
-        # indicating current frequencing of each logical CPU
-        # in kHz
-        current_freq_boundary = len_info // 2
-
-        # The `info` list contains information about
-        # the current frequencies of each logical CPU
-        # as well as the maximum CPU frequency per logical
-        # CPU. Therefore, the total number of entries in
-        # this list will be 2 times the number of logical
-        # CPUs.
-        num_cpus = len_info // 2
-
-        # Get the current frequencies of all CPUs in MHz
-        freq = [float(i) / 1000 for i in info[:current_freq_boundary]]
-
-        # Calculate the average CPU frequency.
-        freq = sum(freq) / len(freq)
+        # One max CPU frequency per logical core will be
+        # present. Max CPU frequencies will be in KHz.
+        num_cpus = len_info
 
         # Get the maximum CPU frequency across all logical CPUs.
         # Doing a max over the list of values incase the device
         # sets different max frequencies per core.
-        max_freq = max([float(i) for i in info[current_freq_boundary:]]) / 1000
+        max_freq = max([float(i) for i in info]) / 1000
 
         self.cpu["cpus"] = num_cpus
-        self.cpu["cpu_mhz"] = freq
-        # TODO: self.cpu["cpu_mhz_max"] = max_freq
+        self.cpu["cpu_mhz"] = max_freq
 
     async def getDetails(self):
         """Gets and saves all details of the node"""
