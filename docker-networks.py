@@ -123,4 +123,4 @@ def cleanup():
 
 
 atexit.register(cleanup)
-input("Present enter to stop workers")
+input("Press enter to stop workers")

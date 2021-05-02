@@ -1,8 +1,12 @@
 FROM debian:stable-slim
 
 # install dependencies
-RUN apt update && apt upgrade -y
-RUN apt install openssh-server vim sudo -y
+RUN apt-get update && apt-get install -y \
+    openssh-server \
+    rsync \
+    sudo \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
 
 # set password for root user
 RUN echo 'root:yabe' | chpasswd
