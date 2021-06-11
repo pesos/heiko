@@ -20,7 +20,8 @@ setuptools.setup(
     ],
     install_requires=[
         'asyncssh>=2.4.0',
-        'PyYAML>=5.3.0'
+        'PyYAML>=5.3.0',
+        'psutil>=5.8.0'
     ],
     python_requires='>=3.7',
     entry_points = {
